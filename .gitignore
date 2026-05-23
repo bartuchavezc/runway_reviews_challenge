@@ -32,9 +32,3 @@ dist-ssr/
 coverage.out
 coverage.html
 
-# --- Runtime state ---
-# The poller writes apps.json + reviews/{appId}.json here. Docker
-# compose bind-mounts this directory; .gitkeep keeps the empty dir
-# present on a fresh clone, everything else is local to the host.
-/data/*
-!/data/.gitkeep
