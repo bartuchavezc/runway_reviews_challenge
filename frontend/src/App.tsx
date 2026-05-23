@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useRef } from 'react'
+import { useState, useEffect, useMemo, useRef, useCallback } from 'react'
 import { useApps } from './hooks/useApps'
 import { useReviews } from './hooks/useReviews'
 import { Sidebar } from './components/Sidebar/Sidebar'
@@ -6,7 +6,7 @@ import { AppHeader } from './components/AppHeader/AppHeader'
 import { FilterBar } from './components/FilterBar/FilterBar'
 import { ReviewList } from './components/ReviewList/ReviewList'
 import { Settings } from './components/Settings/Settings'
-import type { Filters, View } from './types'
+import type { App, Filters, View } from './types'
 import { applyFilters } from './lib/filters'
 import styles from './App.module.css'
 
@@ -98,6 +98,19 @@ export default function App() {
     setFilters({ rating: 'any', query: '', window: 48 })
   }
 
+  // After adding an app, navigate directly to its reviews so the user
+  // doesn't have to click manually in the sidebar. The initial poll kicks
+  // off on the backend immediately; useReviews will auto-retry after 30 s
+  // if the first fetch arrives before the poll finishes.
+  const handleAddApp = useCallback(async (rssUrl: string): Promise<App> => {
+    const app = await addApp(rssUrl)
+    setActiveAppId(app.id)
+    try { localStorage.setItem(STORAGE_KEY, app.id) } catch { /* ignore */ }
+    setFilters({ rating: 'any', query: '', window: 48 })
+    setView('main')
+    return app
+  }, [addApp])
+
   // Client-side filter pipeline lives in ./filters so the branches can be
   // unit-tested without rendering App.
   const filtered = useMemo(() => applyFilters(reviews, filters), [reviews, filters])
@@ -132,7 +145,7 @@ export default function App() {
         {view === 'settings' ? (
           <Settings
             apps={apps}
-            onAdd={addApp}
+            onAdd={handleAddApp}
             onRemove={removeApp}
             rssInputRef={rssInputRef}
           />

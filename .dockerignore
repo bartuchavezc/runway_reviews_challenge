@@ -1,0 +1,13 @@
+# VCS / IDE
+.git
+.gitignore
+.idea
+.vscode
+*.swp
+.DS_Store
+
+# Frontend — not part of the backend build
+frontend/
+
+# IDE / build artefacts inside data — not part of the image seed
+data/reviews/.tmp-*

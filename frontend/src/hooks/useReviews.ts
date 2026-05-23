@@ -11,6 +11,11 @@ import type { Review } from '../types'
 // Cache key is `${appId}:${window}` so different window sizes coexist.
 const cache = new Map<string, Review[]>()
 
+// Tracks keys that already have a pending delayed re-fetch so we don't
+// schedule duplicates when the component re-renders between mount and the
+// 30-second timer firing.
+const pendingRetry = new Set<string>()
+
 export function useReviews(appId: string | null, window = 48) {
   const key = appId ? `${appId}:${window}` : null
 
@@ -82,6 +87,23 @@ export function useReviews(appId: string | null, window = 48) {
     inflight.current = controller
     fetch_(appId, window, controller.signal)
   }, [appId, window, fetch_])
+
+  // When the first fetch for a new app returns empty (backend initial poll
+  // still in flight), schedule a one-shot retry after 30 s so the reviews
+  // appear automatically once the poll completes — no manual page reload needed.
+  useEffect(() => {
+    if (!key || !appId || loading || error !== null || reviews.length > 0) return
+    if (pendingRetry.has(key)) return
+    pendingRetry.add(key)
+    const id = setTimeout(() => {
+      pendingRetry.delete(key)
+      refresh()
+    }, 30_000)
+    return () => {
+      clearTimeout(id)
+      pendingRetry.delete(key)
+    }
+  }, [key, appId, loading, error, reviews.length, refresh])
 
   return { reviews, loading, error, refresh }
 }

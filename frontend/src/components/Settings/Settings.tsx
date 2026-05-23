@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState } from 'react'
 import type { App } from '../../types'
 import { initials, tint } from '../../lib/display'
 import { RSS_REGEX } from '../../lib/validation'
@@ -15,30 +15,6 @@ export function Settings({ apps, onAdd, onRemove, rssInputRef }: Props) {
   const [url, setUrl] = useState('')
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
   const [message, setMessage] = useState('')
-  const [confirmDelete, setConfirmDelete] = useState<string | null>(null)
-  const cancelDeleteRef = useRef<HTMLButtonElement | null>(null)
-  // Per-row × button refs so we can restore focus when the confirm chip
-  // dismisses without deletion. Keyed by app id; entries are GC'd
-  // implicitly when the row unmounts and React drops the ref callback.
-  const removeButtonRefs = useRef<Map<string, HTMLButtonElement | null>>(new Map())
-  // Focus fallback for the case where the user deletes the last (or only)
-  // app — there's no neighbouring × button to land on, so we focus the
-  // Tracked apps heading instead via tabIndex={-1}.
-  const trackedAppsHeadingRef = useRef<HTMLHeadingElement>(null)
-
-  // Move focus to the safer "No" button as soon as the inline confirm chip
-  // mounts. Keyboard users would otherwise be left focusing the now-unmounted
-  // × button and have no clear way to dismiss without reaching for the mouse.
-  useEffect(() => {
-    if (confirmDelete) cancelDeleteRef.current?.focus()
-  }, [confirmDelete])
-
-  // Cancel the inline confirm without deleting. Restores focus to the row's
-  // × button so keyboard users don't get dropped on document.body.
-  const cancelConfirm = (appId: string) => {
-    setConfirmDelete(null)
-    queueMicrotask(() => removeButtonRefs.current.get(appId)?.focus())
-  }
 
   const handleAdd = async () => {
     if (!RSS_REGEX.test(url)) {
@@ -59,28 +35,11 @@ export function Settings({ apps, onAdd, onRemove, rssInputRef }: Props) {
   }
 
   const handleRemove = async (id: string) => {
-    // Pre-compute the focus target before the row unmounts: try the next
-    // row's × button, fall back to the previous row's, then the table
-    // heading (which we make focusable via tabIndex={-1}). Without this,
-    // focus lands on document.body once the row disappears and keyboard
-    // users have to Tab from the top again.
-    const idx = apps.findIndex(a => a.id === id)
-    const fallbackId = apps[idx + 1]?.id ?? apps[idx - 1]?.id ?? null
-
     try {
       await onRemove(id)
-      setConfirmDelete(null)
-      queueMicrotask(() => {
-        if (fallbackId) {
-          removeButtonRefs.current.get(fallbackId)?.focus()
-        } else {
-          trackedAppsHeadingRef.current?.focus()
-        }
-      })
     } catch (e) {
       setStatus('error')
       setMessage(e instanceof Error ? e.message : 'Failed to remove app')
-      setConfirmDelete(null)
     }
   }
 
@@ -141,7 +100,7 @@ export function Settings({ apps, onAdd, onRemove, rssInputRef }: Props) {
         {/* Tracked apps */}
         <section className={styles.section}>
           <div className={styles.tableHeader}>
-            <h2 className={styles.h2} ref={trackedAppsHeadingRef} tabIndex={-1}>Tracked apps</h2>
+            <h2 className={styles.h2}>Tracked apps</h2>
             <span className={styles.tableMeta}>{apps.length} {apps.length === 1 ? 'app' : 'apps'}</span>
           </div>
 
@@ -170,27 +129,11 @@ export function Settings({ apps, onAdd, onRemove, rssInputRef }: Props) {
                 <span className={`${styles.tableMono} ${styles.mute}`}>{app.id}</span>
                 <span className={`${styles.tableMono} ${styles.right}`}>{app.totalReviews}</span>
                 <span>
-                  {confirmDelete === app.id ? (
-                    <div
-                      className={`${styles.chip} ${styles.chipRed} ${styles.inlineConfirm}`}
-                      onKeyDown={e => { if (e.key === 'Escape') cancelConfirm(app.id) }}
-                    >
-                      <span>Remove?</span>
-                      <button className={styles.confirmYes} onClick={() => handleRemove(app.id)}>Yes</button>
-                      <button
-                        ref={cancelDeleteRef}
-                        className={styles.confirmNo}
-                        onClick={() => cancelConfirm(app.id)}
-                      >No</button>
-                    </div>
-                  ) : (
-                    <button
-                      ref={el => { removeButtonRefs.current.set(app.id, el) }}
-                      className={styles.removeBtn}
-                      onClick={() => setConfirmDelete(app.id)}
-                      aria-label={`Remove ${app.name}`}
-                    >×</button>
-                  )}
+                  <button
+                    className={styles.removeBtn}
+                    onClick={() => handleRemove(app.id)}
+                    aria-label={`Remove ${app.name}`}
+                  >×</button>
                 </span>
               </div>
             ))}

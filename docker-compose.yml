@@ -4,7 +4,8 @@
 services:
   backend:
     build:
-      context: ./backend
+      context: .
+      dockerfile: backend/Dockerfile
     image: runway-backend:local
     # `:local` tags don't exist on Docker Hub — skip the pull attempt so
     # `docker compose up` goes straight to `build` instead of timing out
@@ -18,10 +19,6 @@ services:
       MAX_PAGES: "10"
     ports:
       - "8080:8080"
-    volumes:
-      # Host bind mount so review state survives rebuilds and the operator can
-      # inspect / back up apps.json and reviews/ without entering the container.
-      - ./data:/data
     restart: unless-stopped
     # Distroless has no shell and no curl/wget, so we can't run a `curl` healthcheck
     # in the runtime image. The backend stays simple; compose's `depends_on` below
