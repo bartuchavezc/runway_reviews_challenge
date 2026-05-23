@@ -1,0 +1,20 @@
+# VCS / IDE
+.git
+.gitignore
+.idea
+.vscode
+*.swp
+.DS_Store
+
+# Local state — never bake review data into the image; the volume handles it.
+data/
+
+# Test artefacts and locally-built binaries
+*.test
+*.out
+server
+/server
+
+# Dockerfile itself doesn't need to be in the context image
+Dockerfile
+.dockerignore

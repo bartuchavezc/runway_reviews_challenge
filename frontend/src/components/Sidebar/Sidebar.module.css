@@ -1,0 +1,201 @@
+.sidebar {
+  width: var(--sidebar-w);
+  flex: 0 0 var(--sidebar-w);
+  background: var(--sidebar-bg);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 18px 18px 14px;
+}
+
+.logoMark {
+  width: 22px;
+  height: 22px;
+  background: var(--text);
+  color: #fff;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.logoText {
+  font-size: 14.5px;
+  font-weight: 600;
+  letter-spacing: -0.2px;
+  color: var(--text);
+}
+
+.section {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0 8px;
+}
+
+.sectionHeader {
+  /* Visually a label, semantically an <h2> so screen-reader users can
+     jump to the apps list via heading nav. Reset the default block margins
+     since this lives inside a flex column where padding does the spacing. */
+  margin: 0;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.7px;
+  text-transform: uppercase;
+  color: var(--mute);
+  padding: 0 10px 6px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Visually hidden but exposed to assistive tech. Used to give the apps
+   count a more verbose form ("3 tracked") to screen readers while keeping
+   the visual chrome compact. */
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.sectionCount {
+  font-family: var(--font-mono);
+}
+
+.appList {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.appRow {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 10px;
+  border-radius: var(--r-md);
+  color: var(--text);
+  text-align: left;
+  transition: background 120ms;
+}
+
+.appRow:hover {
+  background: var(--surface-alt);
+}
+
+.appRow.active {
+  background: #efece4;
+}
+
+.appRow.active::before {
+  content: '';
+  position: absolute;
+  left: -8px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 2px;
+  height: 16px;
+  background: var(--text);
+  border-radius: 2px;
+}
+
+.swatch {
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+  border: 1px solid rgba(0,0,0,.06);
+  font-size: 9px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: var(--text);
+}
+
+.appName {
+  font-size: 13px;
+  font-weight: 400;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.appRow.active .appName {
+  font-weight: 500;
+}
+
+.addButton {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 7px 10px;
+  margin-top: 6px;
+  border-radius: var(--r-md);
+  border: 1px dashed var(--border-strong);
+  color: var(--mute);
+  font-size: 12.5px;
+  transition: background 120ms, color 120ms;
+}
+
+.addButton:hover {
+  background: var(--surface-alt);
+  color: var(--text);
+}
+
+/* Keyboard-shortcut hint shown on the right side of Add-app.
+   "Press" label is muted, the key glyph is a bordered <kbd> box that
+   looks like an actual key cap. */
+.shortcutHint {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.pressLabel {
+  font-size: 11px;
+  color: var(--mute-faint);
+  letter-spacing: 0.2px;
+}
+
+.key {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 14px;
+  padding: 1px 4px;
+  border: 1px solid var(--border-strong);
+  border-radius: 3px;
+  background: var(--surface-alt);
+  color: var(--text-soft);
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  line-height: 1;
+  /* Subtle bottom hint shadow gives the cap a tactile feel without
+     looking heavy on the light sidebar background. */
+  box-shadow: inset 0 -1px 0 var(--border-strong);
+}

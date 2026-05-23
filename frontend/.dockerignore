@@ -1,0 +1,26 @@
+# VCS / IDE
+.git
+.gitignore
+.idea
+.vscode
+*.swp
+.DS_Store
+
+# Node / build artefacts — rebuilt inside the image
+node_modules
+dist
+.vite
+coverage
+.eslintcache
+
+# Test caches
+.vitest
+*.log
+npm-debug.log*
+
+# Dockerfile / ignore don't need to live in the build context
+Dockerfile
+.dockerignore
+
+# Local docs / READMEs aren't shipped with the production bundle
+README.md

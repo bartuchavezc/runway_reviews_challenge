@@ -1,0 +1,40 @@
+# OS / editor
+.DS_Store
+.vscode/*
+!.vscode/extensions.json
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# --- Frontend (Vite / Node) ---
+node_modules/
+dist/
+dist-ssr/
+*.local
+
+# --- Backend (Go) ---
+# Binaries dropped by `go build` in the module
+/backend/server
+/backend/cmd/server/server
+*.test
+coverage.out
+coverage.html
+
+# --- Runtime state ---
+# The poller writes apps.json + reviews/{appId}.json here. Docker
+# compose bind-mounts this directory; .gitkeep keeps the empty dir
+# present on a fresh clone, everything else is local to the host.
+/data/*
+!/data/.gitkeep

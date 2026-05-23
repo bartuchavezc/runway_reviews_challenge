@@ -1,0 +1,47 @@
+:root {
+  /* colors */
+  --bg:            #faf9f6;
+  --surface:       #ffffff;
+  --surface-alt:   #f6f4ef;
+  --border:        #ece9e1;
+  --border-strong: #dbd7cc;
+  --hairline:      #f3f0e8;
+  --text:          #1a1a18;
+  --text-soft:     #37362f;
+  --mute:          #76746c;
+  /* WCAG-AA Normal compliant (~5.1:1 on #ffffff). Used for small metadata
+     text — stat-tile labels, "Press" keyboard hint, footer review count,
+     dropdown chevrons — where the 4.5:1 minimum applies because the type
+     doesn't qualify as Large (uppercase 10.5px is still classified Normal).
+     Earlier iterations sat at #a8a59c (2.5:1) then #8a8780 (3.4:1); both
+     failed AA Normal. */
+  --mute-faint:    #707068;
+  --accent:        #4f63d2;
+  --accent-soft:   #eef1fb;
+  --red:           #b54023;
+  --red-soft:      #fae7e1;
+  --amber:         #9a6a07;
+  --amber-soft:    #f9eccc;
+  --green:         #3a6e3a;
+  --green-soft:    #e5efde;
+
+  /* sidebar */
+  --sidebar-bg:    #fcfbf8;
+  --sidebar-w:     232px;
+
+  /* typography */
+  --font-sans:  'Geist', sans-serif;
+  --font-mono:  'Geist Mono', monospace;
+
+  /* radii */
+  --r-xs:  3px;
+  --r-sm:  5px;
+  --r-md:  7px;
+  --r-lg:  8px;
+  --r-xl:  9px;
+  --r-2xl: 10px;
+
+  /* shadows */
+  --shadow-dropdown: 0 10px 32px rgba(0,0,0,.10), 0 2px 6px rgba(0,0,0,.04);
+  --shadow-dot-ok:   0 0 0 3px var(--green-soft);
+}

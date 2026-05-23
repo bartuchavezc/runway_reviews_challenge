@@ -1,0 +1,97 @@
+.layout {
+  display: flex;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* Hidden until focused — appears as a small panel pinned to the top-left
+   when a keyboard user tabs into the page, lets them bypass the sidebar
+   and jump straight to the main content area. */
+.skipLink {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  z-index: 200;
+  padding: 8px 14px;
+  background: var(--text);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 500;
+  text-decoration: none;
+  border-radius: var(--r-md);
+  transform: translateY(-150%);
+  transition: transform 120ms;
+}
+
+.skipLink:focus,
+.skipLink:focus-visible {
+  transform: translateY(0);
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--surface);
+  outline: none; /* programmatic focus target for view-switch; not a keyboard nav element */
+}
+
+.empty {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--mute-faint);
+}
+
+/* Server-down full-panel state */
+.serverDown {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 48px 32px;
+}
+
+.serverDownIcon {
+  color: var(--mute-faint);
+  margin-bottom: 4px;
+}
+
+.serverDownTitle {
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: -0.3px;
+  color: var(--text);
+  margin: 0;
+}
+
+.serverDownDesc {
+  font-size: 13px;
+  color: var(--text-soft);
+  text-align: center;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.serverDownRetry {
+  margin-top: 6px;
+  padding: 7px 20px;
+  border-radius: var(--r-md);
+  background: var(--text);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 500;
+  transition: opacity 120ms;
+}
+
+.serverDownRetry:hover {
+  opacity: 0.82;
+}

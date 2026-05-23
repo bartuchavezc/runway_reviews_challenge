@@ -1,0 +1,49 @@
+# Compose v2 schema — the top-level `version:` key is deprecated and intentionally
+# omitted. Run with: `docker compose up --build`.
+
+services:
+  backend:
+    build:
+      context: ./backend
+    image: runway-backend:local
+    # `:local` tags don't exist on Docker Hub — skip the pull attempt so
+    # `docker compose up` goes straight to `build` instead of timing out
+    # on a Hub lookup for ~2 s before falling back.
+    pull_policy: build
+    container_name: runway-backend
+    environment:
+      PORT: "8080"
+      DATA_DIR: "/data"
+      POLL_INTERVAL_MINUTES: "15"
+      MAX_PAGES: "10"
+    ports:
+      - "8080:8080"
+    volumes:
+      # Host bind mount so review state survives rebuilds and the operator can
+      # inspect / back up apps.json and reviews/ without entering the container.
+      - ./data:/data
+    restart: unless-stopped
+    # Distroless has no shell and no curl/wget, so we can't run a `curl` healthcheck
+    # in the runtime image. The backend stays simple; compose's `depends_on` below
+    # uses `service_started` semantics, which is sufficient for this stack.
+    networks:
+      - runway
+
+  frontend:
+    build:
+      context: ./frontend
+    image: runway-frontend:local
+    pull_policy: build
+    container_name: runway-frontend
+    ports:
+      # Host 5173 (matching the Vite dev server) -> container 8080 (nginx-unprivileged).
+      - "5173:8080"
+    depends_on:
+      - backend
+    restart: unless-stopped
+    networks:
+      - runway
+
+networks:
+  runway:
+    driver: bridge

@@ -1,0 +1,38 @@
+Recent iOS App store reviews viewer
+
+For this assignment, you’ll be creating:
+A backend service/app that polls an iOS app’s App Store Connect RSS feed to fetch and store App Store reviews for a specific iOS app
+A React app that calls an endpoint on the backend app to fetch and display new reviews from the last 48 hours
+
+Your service should store data about the reviews it fetches for an app (something as simple as writing to an external file is perfectly fine). The app should be able to be stopped/restarted without losing its progress and state.
+
+Reviews fetched and displayed should be ordered by newest first, and for each review the output should include the review content, author, score, and time the review was submitted.
+
+You should be able to do all of this using the standard libraries of the language you’re building in. If you do use 3rd party libraries, just be able to justify their usage.
+
+Think about how to support any number of apps, and how this would affect your design.
+
+Some extra notes:
+
+The assignment should take 2 - 3 hours to complete
+Given our Golang backend it’s great if you want to work in Go. However if you are not familiar with go, we’d ask you use either Python or Javascript/Typescript instead (and frameworks in those languages). Please avoid a Lisp language, Ruby/Rails, Rust, Elixir, etc. If you are in doubt feel free to ask us!
+Example RSS URL: https://itunes.apple.com/us/rss/customerreviews/id=595068606/sortBy=mostRecent/page=1/json
+Feel free to change the appId in that RSS url to any app of your choosing. You can find the appId for any iOS app on the App Store by going to their App Store Preview and grabbing the “id” in the url: https://apps.apple.com/us/app/snapchat/id447188370
+If you’re having issues getting recent reviews for apps from the RSS feed, feel free to increase the 48 hour time window 
+
+
+What we’re assessing for
+
+Does the app do what it is supposed to do?
+
+App stores review data
+App can be stopped and restarted without losing any data
+React app displays new reviews from the last 48 hours
+React app reviews display required review data (review content, author, score, time submitted)
+
+Is the app well architected?
+
+Is the code well organized, well documented, and easy to follow?
+
+Bonus: Is the app well tested?
+
